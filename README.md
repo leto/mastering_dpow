@@ -275,3 +275,11 @@ to enable the new coin on production:
   to verify code more
 * Set up automated procedures specific to each coin, such as UTXO splitting/etc
 
+
+## License
+
+GNU Public License Version 3
+
+## Copyright
+
+Copyright (c) 2018-2020 Duke Leto
