@@ -1,15 +1,15 @@
-# Mastering Komodo Delayed Proof-of-Work
+# Mastering Delayed Proof-of-Work
 
 ## by Duke Leto
 
 This is a short technical document aimed at developers who are interested to learn
 more about DPoW and/or want to add it to their a cryptocoin to protect
-against consensus (51%) attacks. These attacks are becoming very common
+against consensus (51%) attacks and double spend attacks. These attacks are becoming very common
 against coins from large to small.
 
 This book assumes basic knowledge of the Bitcoin protocol, Bitcoin source code,
-C++ and basic compiler knowledge. No prior knowledge of Komodo is assumed, this
-work contains a basic introduction of Komodo features.
+C++ and basic compiler knowledge. No prior knowledge of Hush is assumed, this
+work contains a basic introduction of Hush features.
 
 # High Level Overview of KMD DPoW
 
@@ -24,7 +24,7 @@ blockchain. Anybody can use it and implement the service.
 
 ## Global Notary Node Network
 
-In more detail, there exist a network of 64 notary nodes spread around the
+For example, say there exist a network of 64 notary nodes spread around the
 globe.  They are not in any one physical location, which makes the system
 resilient against a datacenter outage or natural disaster in one geographical
 location. The algorithm NNs use require 13 notary nodes to come together and
@@ -71,29 +71,6 @@ hard-fork just a short-time later. Exchanges are not excited to update full
 nodes and some exchanges attempt to charge for full node updates (which the
 author finds scammy), so timing the integration of DPoW services can be very
 strategic.
-
-# Double Spend Attack Prevention
-
-It is the authors recommendation that exchanges pause any transactions for
-which data has not yet been notarized to the appropriate chain. For a game
-allowing in-game purchases with digital currencies, it might allow transactions
-up to $10 if the data has been notarized to Komodo, or no limit on transactions
-that have been notarized to Bitcoin. This allows small-value transactions to
-proceed very quickly (Komodo has a 1 minute blocktime) while ensuring
-protection against double-spend attacks for large value transactions. This
-protection comes at the cost of waiting longer, as Bitcoin has 10 minute
-blocktime.
-
-It is important to understand that one half of the process is notarization
-data, which must go from COIN -> KMD -> BTC, and the other half of Double Spend
-Protection is actually looking at this notarization data and deciding if it's
-safe to proceed with some action. Komodo is working on an API to see if a txid
-of a certain dpow-enabled coin has been notarized to KMD and BTC, so that
-exchanges and other parties wanting to protect against double spends can make
-informed decisions, in much shorter time periods than waiting until 120 confirmations.
-
-The API for when notarizations have made it to the KMD chain is at
-https://komodostats.com/api/notary/summary.json .
 
 # DPOWconfs protect against double spends with no code changes
 
