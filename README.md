@@ -11,7 +11,11 @@ This book assumes basic knowledge of the Bitcoin protocol, Bitcoin source code,
 C++ and basic compiler knowledge. No prior knowledge of Hush is assumed, this
 work contains a basic introduction of Hush features.
 
-# High Level Overview of KMD DPoW
+# High Level Overview of Hush DPoW
+
+Delayed Proof-of-Work is a general concept and the Hush Developers have implemented
+a production system which implements the algorithm for HUSH and for any blockchains
+which want to pay HUSH for the service of double spend protection.
 
 DPoW sends blockhash data from your coin, to potentially another coin like HUSH, which is then sent to Bitcoin,
 providing a small coin with a small hashrate the security of BTC hashrate. This
@@ -29,12 +33,12 @@ globe.  They are not in any one physical location, which makes the system
 resilient against a datacenter outage or natural disaster in one geographical
 location. The algorithm NNs use require 13 notary nodes to come together and
 agree on what the latest Merkle root and other metadata that will be embedded
-into the Komodo and Bitcoin blockchains inside the OP\_RETURN data of a
+into the Hush and Bitcoin blockchains inside the OP\_RETURN data of a
 multisig transaction. This means that to take down the notarization process, to
 stop the data flow, one must attack and knock offline 52 different servers in
 diverse locations,  simultaneously. In this case, notarization data would stop
 flowing, but no "fake" or "incorrect" notarization data can be created, because
-the source code of Komodo has the public keys of notary nodes embedded inside.
+the source code of Hush has the public keys of notary nodes embedded inside.
 
 Only notary nodes have the corresponding private keys to make transactions that
 the network will trust as valid notarizations. So DDoS attacks can only stop
@@ -47,30 +51,6 @@ To be clear, DPoW are consensus-level changes to a cryptocoin source code,
 they require a coordinated effort of all exchanges/mining pools/users upgrading,
 since it is a hard fork. Take this into consideration when planning upgrade
 timelines.
-
-## Yearly Hard Forks
-
-Every year Komodo does a hard fork, which coincides with electing new notaries,
-which usually happens in early May. Electing new notaries means changing the
-KMD source code to list these new pubkeys and removing old ones. This means
-that any coin using DPoW will *also need to hardfork at a coordinated time*,
-i.e.  coins using DPoW will also fork in May each year, after new KMD notaries
-have been elected and the new notarization season begins.
-
-Coins can turn this yearly hard-fork into an opportunity to make any other
-non-emergency changes that would be consensus-level hard-forks. It allows
-a yearly upgrade window for each coin, where a hardfork is going to happen
-anyway. For instance, the size of the maximum OP\_RETURN might be changed,
-or a different difficulty algorithm used (test it thoroughly first!).
-
-Additionally, there is a preferred time of year where it makes the most sense
-to integrate DPoW, essentially directly after the yearly KMD notary election
-and hard-fork. That prevents a situation where adding DPoW integration in March
-requires a hard-fork and then the KMD notary election requires another
-hard-fork just a short-time later. Exchanges are not excited to update full
-nodes and some exchanges attempt to charge for full node updates (which the
-author finds scammy), so timing the integration of DPoW services can be very
-strategic.
 
 # DPOWconfs protect against double spends with no code changes
 
@@ -100,8 +80,8 @@ are protected by default.
 
 # Cost of DPoW
 
-The raw cost of 64 global notary nodes making transactions roughly once per
-minute (the Komodo block interval) and continually on other coins has a cost.
+The raw cost of many, say 64 global notary nodes making transactions roughly once every
+75 seconds (the Hush block interval) and continually on other coins has a cost.
 
 Various costs related to DPoW can be broken down into these categories:
 
@@ -117,7 +97,7 @@ Chain](https://github.com/MyHush/hush-smart-chains), there are no integrations n
 the cost for notarization transactions. This can be accomplished by doing an
 airdrop from your current chain to a new Hush Smart Cain, where people use their
 private keys to unlock the funds they owned on the original chain. This can be
-done by the project itself or Komodo can help with this process.
+done by the project itself or Hush Developers can help with this process.
 
 # Integrating DPoW Into Your Coin
 
@@ -130,8 +110,7 @@ immediately compatible or at least a close starting point for development work.
 For example, if your coin is based on Bitcoin 0.15.x, there already exists a
 header file that matches that version of Bitcoin internals exactly. The GAME
 coin was the first external coin to start using dPoW and [this commit](https://github.com/gamecredits-project/GameCredits/commit/e65fe302111408c02d2bf7e286205d4273fa0fed)
-shows how they integrated. This was first created by the author of Komodo,
-jl777, and then the author of this document ported that header file to Bitcoin
+shows how they integrated. This was first created by James Lee and then the author of this document ported that header file to Bitcoin
 0.11.x internals, which Zcash and all Zcash forks have as their internals. So
 if your coin is a Zcash fork, you should use the
 [komodo\_validation011.h](https://github.com/MyHush/hush/blob/e529ad8d35d4dabf66fa10982e056149414f179b/src/komodo_validation011.h)
@@ -163,7 +142,7 @@ ask the Bitcoin blockchain if a given txid has been notarized.
 Note that the above block-times are "worst case" under normal network
 conditions, i.e. a transaction is made a millisecond after a block, so it has
 to wait the entire block interval on HUSH. And then is unlucky enough to have
-to wait an entire KMD block interval and an entire Bitcoin block interval.
+to wait an entire Bitcoin block interval.
 
 It's possible that a bug or attack or large difficulty change makes one block
 much longer than the average block interval time, which would increase the
@@ -212,7 +191,7 @@ if the coin is written in another language then those header files must be
 ported to that language first.
 
 If your coin reimplements Bitcoin protocol from scratch, then it may still be
-compatible. Please join #developer on Komodo Discord to ask more questions.
+compatible.
 
 ### Integration Procedure
 
@@ -234,7 +213,7 @@ not describe every single step but it will be applicable to most situations.
     * One node will not have txindex
 * If both nodes can sync from scratch with no bad errors, then you are most
     likely done with integration!
-* Contact Komodo for the next round of instructions, which is Notary Nodes
+* Contact Hush for the next round of instructions, which is Notary Nodes
     testing your code
 
 * List of integrated coins and their header files
@@ -274,7 +253,7 @@ coins are added to notarization process:
  * Other miscellaneous changes
 
 For instance, Hush was the first coin with 2 bytes of base58 prefix to
-be notarized by KMD. This caused issues because the internals of the
+be notarized. This caused issues because the internals of the
 coin assumes a 1 byte prefix in various places. Thankfully one of
 the amazing notary node operators stepped in and wrote a good chunk
 of C++ code to enable 2 byte prefixes, which makes many Zcash forks
